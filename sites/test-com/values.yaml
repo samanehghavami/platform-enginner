@@ -1,0 +1,9 @@
+site:
+  domain: test.com
+  type: shop
+wordpress:
+  admin:
+    email: smn.gh
+  plugins:
+  - woocommerce
+  theme: storefront

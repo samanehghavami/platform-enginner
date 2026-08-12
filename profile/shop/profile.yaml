@@ -1,0 +1,4 @@
+wordpress:
+  theme: storefront
+  plugins:
+    - woocommerce

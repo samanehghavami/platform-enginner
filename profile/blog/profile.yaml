@@ -1,0 +1,4 @@
+wordpress:
+  theme: astra
+  plugins:
+    - wordpress-seo

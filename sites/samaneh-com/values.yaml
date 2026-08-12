@@ -1,0 +1,9 @@
+site:
+  domain: samaneh.com
+  type: shop
+wordpress:
+  admin:
+    email: smn.ghlsdf
+  plugins:
+  - woocommerce
+  theme: storefront
