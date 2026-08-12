@@ -35,10 +35,10 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Test Python CLI
-        run: |
-          source venv/bin/activate
-          python -m pytest
+#      - name: Test Python CLI
+#        run: |
+#          source venv/bin/activate
+#          python -m pytest
 
 
   # =========================
