@@ -1,0 +1,16 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mariadb
+  labels:
+    app: {{ .Release.Name }}-mariadb
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-mariadb
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+{{- end }}

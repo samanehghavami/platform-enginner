@@ -6,17 +6,50 @@ metadata:
     app: {{ .Release.Name }}-wordpress
 spec:
   replicas: {{ .Values.wordpress.replicaCount }}
+
   selector:
     matchLabels:
       app: {{ .Release.Name }}-wordpress
+
   template:
     metadata:
       labels:
         app: {{ .Release.Name }}-wordpress
+
     spec:
       containers:
         - name: wordpress
+
           image: "{{ .Values.wordpress.image.repository }}:{{ .Values.wordpress.image.tag }}"
+
           imagePullPolicy: {{ .Values.wordpress.image.pullPolicy }}
+
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
+
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: "{{ .Release.Name }}-mariadb:3306"
+
+            - name: WORDPRESS_DB_NAME
+              value: {{ .Values.mariadb.database | quote }}
+
+            - name: WORDPRESS_DB_USER
+              value: {{ .Values.mariadb.username | quote }}
+
+            - name: WORDPRESS_DB_PASSWORD
+              value: {{ .Values.mariadb.password | quote }}
+
+          {{- if .Values.wordpress.persistence.enabled }}
+          volumeMounts:
+            - name: wordpress-data
+              mountPath: /var/www/html
+          {{- end }}
+
+      {{- if .Values.wordpress.persistence.enabled }}
+      volumes:
+        - name: wordpress-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-wordpress
+      {{- end }}
