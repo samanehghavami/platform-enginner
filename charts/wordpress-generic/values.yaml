@@ -8,6 +8,7 @@ wordpress:
   image:
     repository: wordpress
     tag: latest
+    pullPolicy: IfNotPresent
 
   admin:
     email: admin@example.com
@@ -15,5 +16,27 @@ wordpress:
   theme: ""
   plugins: []
 
+  persistence:
+    enabled: true
+    size: 10Gi
+
 mariadb:
   enabled: true
+
+  image:
+    repository: mariadb
+    tag: "11.4"
+    pullPolicy: IfNotPresent
+
+  database: wordpress
+  username: wordpress
+  password: wordpress-password
+  rootPassword: root-password
+
+  persistence:
+    enabled: true
+    size: 5Gi
+
+ingress:
+  enabled: true
+  className: nginx
