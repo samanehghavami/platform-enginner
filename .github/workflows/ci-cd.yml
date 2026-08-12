@@ -21,10 +21,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
+      - name: Check Python
+        run: |
+          which python3.12
+          python3.12 --version
 
       - name: Create virtual environment
         run: |
