@@ -13,11 +13,16 @@ wordpress:
   admin:
     email: admin@example.com
 
-  theme: ""
+  # Plugins that should be installed
   plugins: []
+
+  # Theme that should be installed
+  theme: ""
 
   persistence:
     enabled: true
+    storageClass: local-path
+    accessMode: ReadWriteOnce
     size: 10Gi
 
 mariadb:
@@ -35,6 +40,8 @@ mariadb:
 
   persistence:
     enabled: true
+    storageClass: local-path
+    accessMode: ReadWriteOnce
     size: 5Gi
 
 ingress:

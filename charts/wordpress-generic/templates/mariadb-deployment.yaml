@@ -1,23 +1,33 @@
-{{- if .Values.mariadb.enabled }}
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: {{ .Release.Name }}-mariadb
+
   labels:
     app: {{ .Release.Name }}-mariadb
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: {{ .Release.Name }}-mariadb
+
   template:
+
     metadata:
       labels:
         app: {{ .Release.Name }}-mariadb
+
     spec:
+
       containers:
+
         - name: mariadb
+
           image: "{{ .Values.mariadb.image.repository }}:{{ .Values.mariadb.image.tag }}"
+
           imagePullPolicy: {{ .Values.mariadb.image.pullPolicy }}
 
           ports:
@@ -25,6 +35,7 @@ spec:
               containerPort: 3306
 
           env:
+
             - name: MARIADB_ROOT_PASSWORD
               value: {{ .Values.mariadb.rootPassword | quote }}
 
@@ -38,11 +49,13 @@ spec:
               value: {{ .Values.mariadb.password | quote }}
 
           volumeMounts:
+
             - name: mariadb-data
               mountPath: /var/lib/mysql
 
       volumes:
+
         - name: mariadb-data
+
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-mariadb
-{{- end }}

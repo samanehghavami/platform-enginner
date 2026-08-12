@@ -1,14 +1,20 @@
-{{- if and .Values.mariadb.enabled .Values.mariadb.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
+
 metadata:
   name: {{ .Release.Name }}-mariadb
+
   labels:
     app: {{ .Release.Name }}-mariadb
+
 spec:
+
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.mariadb.persistence.accessMode }}
+
+  storageClassName: {{ .Values.mariadb.persistence.storageClass }}
+
   resources:
+
     requests:
       storage: {{ .Values.mariadb.persistence.size }}
-{{- end }}

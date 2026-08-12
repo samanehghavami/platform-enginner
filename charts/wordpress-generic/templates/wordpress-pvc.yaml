@@ -1,14 +1,21 @@
 {{- if .Values.wordpress.persistence.enabled }}
+
 apiVersion: v1
 kind: PersistentVolumeClaim
+
 metadata:
   name: {{ .Release.Name }}-wordpress
   labels:
     app: {{ .Release.Name }}-wordpress
+
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.wordpress.persistence.accessMode }}
+
+  storageClassName: {{ .Values.wordpress.persistence.storageClass }}
+
   resources:
     requests:
       storage: {{ .Values.wordpress.persistence.size }}
+
 {{- end }}
