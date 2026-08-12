@@ -1,0 +1,19 @@
+site:
+  domain: example.com
+  type: blog
+
+wordpress:
+  replicaCount: 1
+
+  image:
+    repository: wordpress
+    tag: latest
+
+  admin:
+    email: admin@example.com
+
+  theme: ""
+  plugins: []
+
+mariadb:
+  enabled: true
