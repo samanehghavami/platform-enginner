@@ -6,8 +6,8 @@ wordpress:
   replicaCount: 1
 
   image:
-    repository: wordpress
-    tag: latest
+    repository: wordpress-wpbuilder
+    tag: "1.0"
     pullPolicy: IfNotPresent
 
   admin:
