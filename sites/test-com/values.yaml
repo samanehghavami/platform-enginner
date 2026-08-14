@@ -1,9 +1,11 @@
 site:
   domain: test.com
-  type: shop
+  type: blog
 wordpress:
   admin:
-    email: smn.gh
+    username: admin
+    password: '123'
+    email: smn.gh2016@gmail.com
+  theme: astra
   plugins:
-  - woocommerce
-  theme: storefront
+  - wordpress-seo
