@@ -3,7 +3,7 @@ site:
   type: shop
 wordpress:
   admin:
-    email: smn.ghlsdf
+    email: smn.gh2016@gmail.com
   plugins:
   - woocommerce
   theme: storefront
