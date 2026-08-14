@@ -11,12 +11,12 @@ wordpress:
     pullPolicy: IfNotPresent
 
   admin:
+    username: admin
+    password: admin-password
     email: admin@example.com
 
-  # Plugins that should be installed
   plugins: []
 
-  # Theme that should be installed
   theme: ""
 
   persistence:

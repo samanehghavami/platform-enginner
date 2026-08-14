@@ -1,0 +1,138 @@
+apiVersion: batch/v1
+kind: Job
+
+metadata:
+  name: {{ .Release.Name }}-wordpress-init
+
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+
+spec:
+  backoffLimit: 10
+
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-wordpress-init
+
+    spec:
+      restartPolicy: OnFailure
+
+      containers:
+        - name: wordpress-init
+
+          image: "{{ .Values.wordpress.image.repository }}:{{ .Values.wordpress.image.tag }}"
+
+          imagePullPolicy: {{ .Values.wordpress.image.pullPolicy }}
+
+          command:
+            - /bin/bash
+            - -c
+
+          args:
+            - |
+              set -e
+
+              echo "======================================"
+              echo "WPBuilder WordPress Initialization"
+              echo "======================================"
+
+              echo "Waiting for MariaDB..."
+
+              until wp db check \
+                --path=/var/www/html \
+                --allow-root
+              do
+                echo "MariaDB is not ready..."
+                sleep 5
+              done
+
+              echo "MariaDB is ready."
+
+              echo "======================================"
+              echo "Checking WordPress installation"
+              echo "======================================"
+
+              if wp core is-installed \
+                --path=/var/www/html \
+                --allow-root
+              then
+                echo "WordPress is already installed."
+
+              else
+
+                echo "Installing WordPress..."
+
+                wp core install \
+                  --path=/var/www/html \
+                  --allow-root \
+                  --url="http://{{ .Values.site.domain }}" \
+                  --title="{{ .Values.site.domain }}" \
+                  --admin_user="{{ .Values.wordpress.admin.username }}" \
+                  --admin_password="{{ .Values.wordpress.admin.password }}" \
+                  --admin_email="{{ .Values.wordpress.admin.email }}"
+
+              fi
+
+              echo "======================================"
+              echo "Installing Theme"
+              echo "======================================"
+
+              {{- if .Values.wordpress.theme }}
+
+              echo "Theme: {{ .Values.wordpress.theme }}"
+
+              wp theme install \
+                "{{ .Values.wordpress.theme }}" \
+                --activate \
+                --path=/var/www/html \
+                --allow-root
+
+              {{- else }}
+
+              echo "No theme configured."
+
+              {{- end }}
+
+              echo "======================================"
+              echo "Installing Plugins"
+              echo "======================================"
+
+              {{- range .Values.wordpress.plugins }}
+
+              echo "Plugin: {{ . }}"
+
+              wp plugin install \
+                "{{ . }}" \
+                --activate \
+                --path=/var/www/html \
+                --allow-root
+
+              {{- end }}
+
+              echo "======================================"
+              echo "Initialization completed"
+              echo "======================================"
+
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: "{{ .Release.Name }}-mariadb:3306"
+
+            - name: WORDPRESS_DB_NAME
+              value: {{ .Values.mariadb.database | quote }}
+
+            - name: WORDPRESS_DB_USER
+              value: {{ .Values.mariadb.username | quote }}
+
+            - name: WORDPRESS_DB_PASSWORD
+              value: {{ .Values.mariadb.password | quote }}
+
+          volumeMounts:
+            - name: wordpress-data
+              mountPath: /var/www/html
+
+      volumes:
+        - name: wordpress-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-wordpress
