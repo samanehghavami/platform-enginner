@@ -47,3 +47,7 @@ mariadb:
 ingress:
   enabled: true
   className: nginx
+
+  tls:
+    enabled: true
+    clusterIssuer: letsencrypt-prod

@@ -126,3 +126,7 @@ jobs:
       - name: Show ingress
         run: |
           kubectl get ingress -n wpbuilder
+      - name: Show certificates
+        run: |
+          kubectl get certificate -n wpbuilder
+          kubectl get certificaterequest -n wpbuilder

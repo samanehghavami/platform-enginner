@@ -9,10 +9,18 @@ metadata:
 
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.clusterIssuer }}
 
 spec:
 
   ingressClassName: {{ .Values.ingress.className }}
+
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.site.domain }}
+      secretName: {{ .Release.Name }}-tls
+  {{- end }}
 
   rules:
 
@@ -25,12 +33,12 @@ spec:
           - path: /
             pathType: Prefix
 
-            backend:
+          backend:
 
-              service:
-                name: {{ .Release.Name }}-wordpress
+            service:
+              name: {{ .Release.Name }}-wordpress
 
-                port:
-                  number: 80
+              port:
+                number: 80
 
 {{- end }}
